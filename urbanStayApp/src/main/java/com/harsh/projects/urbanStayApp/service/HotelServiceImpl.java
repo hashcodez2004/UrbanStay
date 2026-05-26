@@ -5,6 +5,7 @@ import com.harsh.projects.urbanStayApp.entity.Hotel;
 import com.harsh.projects.urbanStayApp.entity.Room;
 import com.harsh.projects.urbanStayApp.exception.ResourceNotFoundException;
 import com.harsh.projects.urbanStayApp.repository.HotelRepository;
+import com.harsh.projects.urbanStayApp.repository.RoomRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,7 @@ public class HotelServiceImpl implements HotelService{
 
     private final HotelRepository hotelRepository;
     private final InventoryService inventoryService;
+    private final RoomRepository roomRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -61,6 +63,7 @@ public class HotelServiceImpl implements HotelService{
 
         for(Room room: hotel.getRooms()){
             inventoryService.deleteCurrentAndFutureInventories(room);
+            roomRepository.delete(room);
         }
 
         hotelRepository.deleteById(hotelId);
