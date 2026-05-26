@@ -6,6 +6,7 @@ import com.harsh.projects.urbanStayApp.entity.Room;
 import com.harsh.projects.urbanStayApp.exception.ResourceNotFoundException;
 import com.harsh.projects.urbanStayApp.repository.HotelRepository;
 import com.harsh.projects.urbanStayApp.repository.RoomRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -66,14 +67,14 @@ public class RoomServiceImpl implements RoomService{
     }
 
     @Override
-    public void deleteRoomsById(Long roomId) {
+    @Transactional
+    public void deleteRoomById(Long roomId) {
         log.info("Deleting the room with ID: {}", roomId);
-        boolean exists = roomRepository.existsById(roomId);
-        if(!exists){
-            throw new ResourceNotFoundException("Room not found with ID: "+roomId);
-        }
-        roomRepository.deleteById(roomId);
+        Room room = roomRepository
+                .findById(roomId)
+                .orElseThrow(() -> new ResourceNotFoundException("Room not found with id: "+roomId));
 
-//        TODO: delete all future inventories for this room
+        inventoryService.deleteCurrentAndFutureInventories(room);
+        roomRepository.deleteById(roomId);
     }
 }

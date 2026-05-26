@@ -5,6 +5,7 @@ import com.harsh.projects.urbanStayApp.entity.Hotel;
 import com.harsh.projects.urbanStayApp.entity.Room;
 import com.harsh.projects.urbanStayApp.exception.ResourceNotFoundException;
 import com.harsh.projects.urbanStayApp.repository.HotelRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -52,16 +53,21 @@ public class HotelServiceImpl implements HotelService{
     }
 
     @Override
-    public void deleteHotelById(Long id) {
-        boolean exists = hotelRepository.existsById(id);
-        if(!exists) throw new ResourceNotFoundException("Hotel not found with id: "+id);
+    @Transactional
+    public void deleteHotelById(Long hotelId) {
+        Hotel hotel = hotelRepository
+                .findById(hotelId)
+                .orElseThrow(() -> new ResourceNotFoundException("Hotel not found with id: "+hotelId));
 
-        hotelRepository.deleteById(id);
+        for(Room room: hotel.getRooms()){
+            inventoryService.deleteCurrentAndFutureInventories(room);
+        }
 
-        // TODO: delete the future inventories for this hotel
+        hotelRepository.deleteById(hotelId);
     }
 
     @Override
+    @Transactional
     public void activateHotel(Long hotelId) {
         log.info("Activating the hotel with ID: {}", hotelId);
         Hotel hotel = hotelRepository
