@@ -2,6 +2,7 @@ package com.harsh.projects.urbanStayApp.service;
 
 import com.harsh.projects.urbanStayApp.dto.HotelDto;
 import com.harsh.projects.urbanStayApp.entity.Hotel;
+import com.harsh.projects.urbanStayApp.entity.Room;
 import com.harsh.projects.urbanStayApp.exception.ResourceNotFoundException;
 import com.harsh.projects.urbanStayApp.repository.HotelRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 public class HotelServiceImpl implements HotelService{
 
     private final HotelRepository hotelRepository;
+    private final InventoryService inventoryService;
     private final ModelMapper modelMapper;
 
     @Override
@@ -67,7 +69,11 @@ public class HotelServiceImpl implements HotelService{
                 .orElseThrow(() -> new ResourceNotFoundException("Hotel not found with id: "+hotelId));
 
         hotel.setActive(true);
-//        TODO: Create Inventory for all the rooms for this hotel
+
+        //assuming we only do it once
+        for(Room room: hotel.getRooms()){
+            inventoryService.initializeRoomForAYear(room);
+        }
     }
 
 
