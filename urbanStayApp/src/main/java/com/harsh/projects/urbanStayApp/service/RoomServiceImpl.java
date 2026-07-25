@@ -57,7 +57,7 @@ public class RoomServiceImpl implements RoomService{
     }
 
     @Override
-    public RoomDto getRoomsById(Long roomId) {
+    public RoomDto getRoomById(Long roomId) {
         log.info("Getting the room with ID: {}", roomId);
         Room room = roomRepository
                 .findById(roomId)
@@ -74,7 +74,7 @@ public class RoomServiceImpl implements RoomService{
                 .findById(roomId)
                 .orElseThrow(() -> new ResourceNotFoundException("Room not found with id: "+roomId));
 
-        inventoryService.deleteCurrentAndFutureInventories(room);
+        inventoryService.deleteAllInventories(room);
         roomRepository.deleteById(roomId);
     }
 }

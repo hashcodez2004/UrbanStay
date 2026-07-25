@@ -5,13 +5,11 @@ import com.harsh.projects.urbanStayApp.dto.HotelSearchRequest;
 import com.harsh.projects.urbanStayApp.entity.Room;
 import org.springframework.data.domain.Page;
 
-import java.time.LocalDate;
-
 public interface InventoryService {
 
     void initializeRoomForAYear(Room room);
 
-    void deleteCurrentAndFutureInventories(Room room);
+    void deleteAllInventories(Room room);
 
     Page<HotelDto> searchHotels(HotelSearchRequest hotelSearchRequest);
 }

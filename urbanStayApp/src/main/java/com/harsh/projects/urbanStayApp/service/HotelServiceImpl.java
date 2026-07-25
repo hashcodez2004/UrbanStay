@@ -66,7 +66,7 @@ public class HotelServiceImpl implements HotelService{
                 .orElseThrow(() -> new ResourceNotFoundException("Hotel not found with id: "+hotelId));
 
         for(Room room: hotel.getRooms()){
-            inventoryService.deleteCurrentAndFutureInventories(room);
+            inventoryService.deleteAllInventories(room);
             roomRepository.delete(room);
         }
 

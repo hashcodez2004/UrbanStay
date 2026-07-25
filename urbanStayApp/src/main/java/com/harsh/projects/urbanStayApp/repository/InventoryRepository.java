@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @Repository
 public interface InventoryRepository extends JpaRepository<Inventory, Long> {
 
-    void deleteByDateGreaterThanEqualAndRoom(LocalDate date, Room room);
+    void deleteByRoom(Room room);
 
     @Query("""
             SELECT DISTINCT i.hotel
