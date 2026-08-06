@@ -1,0 +1,26 @@
+package com.harsh.projects.urbanStayApp.strategy;
+
+import com.harsh.projects.urbanStayApp.entity.Inventory;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+
+@Service
+@RequiredArgsConstructor
+public class HolidayPricingStrategy implements PricingStrategy{
+
+    private final PricingStrategy wrapped;
+
+    @Override
+    public BigDecimal calculatePrice(Inventory inventory) {
+
+        BigDecimal price = wrapped.calculatePrice(inventory);
+
+        boolean isTodayHoliday = true;  //call an api or check with Local data
+        if(isTodayHoliday){
+            price = price.multiply(BigDecimal.valueOf(1.25));
+        }
+        return price;
+    }
+}
