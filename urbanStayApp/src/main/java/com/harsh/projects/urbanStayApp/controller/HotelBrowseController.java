@@ -2,6 +2,7 @@ package com.harsh.projects.urbanStayApp.controller;
 
 import com.harsh.projects.urbanStayApp.dto.HotelDto;
 import com.harsh.projects.urbanStayApp.dto.HotelInfoDto;
+import com.harsh.projects.urbanStayApp.dto.HotelPriceDto;
 import com.harsh.projects.urbanStayApp.dto.HotelSearchRequest;
 import com.harsh.projects.urbanStayApp.service.HotelService;
 import com.harsh.projects.urbanStayApp.service.InventoryService;
@@ -21,9 +22,9 @@ public class HotelBrowseController {
     private final HotelService hotelService;
 
     @GetMapping("/search")
-    public ResponseEntity<Page<HotelDto>> searchHotels(@RequestBody HotelSearchRequest hotelSearchRequest){
+    public ResponseEntity<Page<HotelPriceDto>> searchHotels(@RequestBody HotelSearchRequest hotelSearchRequest){
 
-        Page<HotelDto> page = inventoryService.searchHotels(hotelSearchRequest);
+        var page = inventoryService.searchHotels(hotelSearchRequest);
         return ResponseEntity.ok(page);
     }
 
